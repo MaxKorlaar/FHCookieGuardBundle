@@ -31,7 +31,19 @@ final class FHCookieGuardExtensionTest extends TestCase
         Assert::assertContains(CookieGuardExtension::class, $this->container->getServiceIds());
 
         Assert::assertTrue($this->container->hasAlias('fh_cookie_guard.twig.cookie_guard_extension'));
-        Assert::assertEquals(CookieGuardExtension::class, (string) $this->container->getAlias('fh_cookie_guard.twig.cookie_guard_extension'));
+        Assert::assertEquals(CookieGuardExtension::class, (string)$this->container->getAlias('fh_cookie_guard.twig.cookie_guard_extension'));
+    }
+
+    public function testExtensionLoadsCustomConfig(): void
+    {
+        $customCookieName = 'has-cookies';
+        $customConfig = [
+            ['cookie_name' => $customCookieName]
+        ];
+
+        $this->extension->load($customConfig, $this->container);
+
+        Assert::assertEquals($customCookieName, $this->container->getParameter('fh_cookie_guard.cookie_name'));
     }
 
     public function tearDown(): void
